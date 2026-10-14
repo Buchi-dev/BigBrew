@@ -38,8 +38,8 @@ function AdminPage() {
         <section>
           <h1 className="text-3xl font-extrabold">Admin overview</h1>
           <p className="text-sm text-muted-foreground">
-            Charts and management screens are sketched here while the operational flow is being
-            built.
+            Company-wide metrics stay here for now. Branch teams should use the ops dashboard and
+            order board for day-to-day intake, availability, payments, and pickup flow.
           </p>
         </section>
         <section className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
@@ -75,9 +75,23 @@ function AdminPage() {
             </div>
           </div>
           <div className="rounded-2xl border bg-card p-4 shadow-card">
-            <h2 className="font-bold">Admin modules</h2>
+            <h2 className="font-bold">Operations shortcuts</h2>
             <div className="mt-3 space-y-2">
-              {["Products & categories", "Branches", "Users & roles", "Audit logs"].map((label) => (
+              <Link
+                to="/branch"
+                className="flex items-center rounded-xl border p-3 text-sm font-semibold hover:border-primary"
+              >
+                <Building2 className="mr-2 h-4 w-4 text-primary" />
+                Branch ops dashboard
+              </Link>
+              <Link
+                to="/branch/orders"
+                className="flex items-center rounded-xl border p-3 text-sm font-semibold hover:border-primary"
+              >
+                <ClipboardList className="mr-2 h-4 w-4 text-primary" />
+                Active order board
+              </Link>
+              {["Products & categories", "Users & roles", "Audit logs"].map((label) => (
                 <div
                   key={label}
                   className="flex items-center rounded-xl border p-3 text-sm font-semibold"
@@ -91,7 +105,7 @@ function AdminPage() {
               ))}
             </div>
             <Button asChild className="mt-4 w-full">
-              <Link to="/branch">Open branch demo</Link>
+              <Link to="/branch">Open branch ops flow</Link>
             </Button>
           </div>
         </section>

@@ -171,6 +171,7 @@ export function pickupSlots(
 
 // ---------- Order state machine ----------
 export const ACTIVE: OrderStatus[] = ["pending", "accepted", "preparing", "ready"];
+export const ORDER_LANES: OrderStatus[] = ["pending", "accepted", "preparing", "ready"];
 
 const TRANSITIONS: Record<OrderStatus, OrderStatus[]> = {
   pending: ["accepted", "rejected", "cancelled"],
@@ -213,3 +214,59 @@ export const STATUS_LABEL: Record<OrderStatus, string> = {
   expired: "Expired",
   noshow: "No-show",
 };
+
+export type UrgencyLevel = "late" | "urgent" | "soon" | "normal";
+
+export function sortOrdersByPickup(a: Order, b: Order) {
+  const pickup = new Date(a.pickupTime).getTime() - new Date(b.pickupTime).getTime();
+  if (pickup !== 0) return pickup;
+  return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+}
+
+export function groupActiveOrdersByStatus(orders: Order[], branchId?: string) {
+  const grouped = Object.fromEntries(ORDER_LANES.map((status) => [status, []])) as Record<
+    (typeof ORDER_LANES)[number],
+    Order[]
+  >;
+  for (const order of orders) {
+    if (branchId && order.branchId !== branchId) continue;
+    if (!ACTIVE.includes(order.status)) continue;
+    grouped[order.status].push(order);
+  }
+  for (const status of ORDER_LANES) grouped[status].sort(sortOrdersByPickup);
+  return grouped;
+}
+
+export function orderUrgency(order: Order, now = new Date()) {
+  const minutes = Math.round((new Date(order.pickupTime).getTime() - now.getTime()) / 60000);
+  if (minutes < 0) return { level: "late" as const, label: `${Math.abs(minutes)}m late`, minutes };
+  if (minutes <= 5) return { level: "urgent" as const, label: "Due now", minutes };
+  if (minutes <= 15) return { level: "soon" as const, label: `${minutes}m`, minutes };
+  return { level: "normal" as const, label: `${minutes}m`, minutes };
+}
+
+export function activeCapacity(branch: Branch, activeCount: number) {
+  const limit = Math.max(1, branch.maxActive);
+  const percent = Math.min(100, Math.round((activeCount / limit) * 100));
+  const remaining = Math.max(0, limit - activeCount);
+  const level = activeCount >= limit ? "full" : percent >= 80 ? "warning" : "ok";
+  const label =
+    level === "full" ? "At capacity" : level === "warning" ? "Near capacity" : "Capacity healthy";
+  return { activeCount, limit, percent, remaining, level, label };
+}
+
+export function branchAvailabilitySummary(
+  products: Product[],
+  map: BranchProductMap,
+  branchId: string,
+) {
+  const enabled = products.filter((p) => p.enabled);
+  const soldOut = enabled.filter((p) => !!map[branchId]?.[p.id]?.soldOut);
+  return {
+    total: products.length,
+    enabled: enabled.length,
+    available: enabled.length - soldOut.length,
+    soldOut: soldOut.length,
+    disabled: products.length - enabled.length,
+  };
+}
