@@ -3,7 +3,6 @@ import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
 import { nitro } from "nitro/vite";
 import { defineConfig } from "vite";
-import tsConfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig(({ command }) => ({
   plugins: [
@@ -13,10 +12,10 @@ export default defineConfig(({ command }) => ({
     }),
     react(),
     tailwindcss(),
-    tsConfigPaths(),
     command === "build" ? nitro() : undefined,
   ],
   resolve: {
+    tsconfigPaths: true,
     alias: {
       "@": "/src",
     },
