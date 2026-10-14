@@ -58,9 +58,25 @@ describe("App routing", () => {
     await waitFor(() =>
       expect(screen.getByRole("heading", { name: /order board/i })).toBeInTheDocument(),
     );
-    expect(screen.getByRole("heading", { name: "Pending" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Accepted" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Preparing" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Ready for pickup" })).toBeInTheDocument();
+    expect(screen.getByRole("tablist", { name: /order status lanes/i })).toBeInTheDocument();
+    expect(screen.getAllByRole("heading", { name: "Pending" }).length).toBeGreaterThan(0);
+    expect(screen.getAllByRole("heading", { name: "Accepted" }).length).toBeGreaterThan(0);
+    expect(screen.getAllByRole("heading", { name: "Preparing" }).length).toBeGreaterThan(0);
+    expect(screen.getAllByRole("heading", { name: "Ready for pickup" }).length).toBeGreaterThan(0);
+    expect(screen.getAllByRole("button", { name: /verify/i }).length).toBeGreaterThan(0);
+    expect(screen.getAllByRole("button", { name: /accept/i }).length).toBeGreaterThan(0);
+  });
+
+  it("renders one clean empty state for an empty branch order board", async () => {
+    window.localStorage.setItem(
+      "bigbrew-demo-v1",
+      JSON.stringify({ orders: [], session: { userId: "u-staff3" } }),
+    );
+    await renderPath("/branch/orders");
+
+    await waitFor(() =>
+      expect(screen.getByRole("heading", { name: /no active orders/i })).toBeInTheDocument(),
+    );
+    expect(screen.queryByText("Lane clear")).not.toBeInTheDocument();
   });
 });

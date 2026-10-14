@@ -63,7 +63,7 @@ function BranchDashboard() {
   return (
     <div className="min-h-screen bg-background">
       <header className="border-b bg-card">
-        <div className="mx-auto flex h-16 max-w-6xl items-center gap-3 px-4">
+        <div className="mx-auto flex min-h-16 max-w-7xl flex-wrap items-center gap-2 px-3 py-3 sm:px-4">
           <Logo />
           <span className="rounded-full bg-primary-soft px-3 py-1 text-xs font-bold text-primary-hover">
             Branch
@@ -76,11 +76,13 @@ function BranchDashboard() {
           </div>
         </div>
       </header>
-      <main className="mx-auto max-w-6xl space-y-5 px-4 py-5">
-        <section className="rounded-2xl border bg-card p-5 shadow-card">
+      <main className="mx-auto max-w-7xl space-y-4 px-3 py-4 sm:px-4 sm:py-5">
+        <section className="rounded-2xl border bg-card p-4 shadow-card sm:p-5">
           <div className="flex flex-wrap items-start justify-between gap-3">
-            <div>
-              <h1 className="text-3xl font-extrabold">Branch ops dashboard</h1>
+            <div className="min-w-0">
+              <h1 className="text-2xl font-extrabold leading-tight sm:text-3xl">
+                Branch ops dashboard
+              </h1>
               <p className="text-sm text-muted-foreground">{branch.address}</p>
             </div>
             <div className="flex flex-wrap items-center gap-2">
@@ -90,7 +92,7 @@ function BranchDashboard() {
               </span>
             </div>
           </div>
-          <div className="mt-4 grid gap-3 md:grid-cols-3">
+          <div className="mt-4 grid gap-2 sm:grid-cols-3 sm:gap-3">
             <HealthCard
               icon={open && branch.accepting ? <PlayCircle /> : <PauseCircle />}
               label="Online intake"
@@ -113,7 +115,7 @@ function BranchDashboard() {
           </div>
         </section>
 
-        <section className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <section className="grid grid-cols-2 gap-2 sm:gap-3 lg:grid-cols-5">
           <Metric icon={<ClipboardList />} label="Active orders" value={String(active.length)} />
           {ORDER_LANES.map((status) => (
             <Metric
@@ -125,7 +127,7 @@ function BranchDashboard() {
           ))}
         </section>
 
-        <section className="grid gap-3 sm:grid-cols-3">
+        <section className="grid gap-2 sm:grid-cols-3 sm:gap-3">
           <Metric
             icon={<Coffee />}
             label="Available drinks"
@@ -135,8 +137,8 @@ function BranchDashboard() {
           <Metric icon={<BarChart3 />} label="Completed sales" value={peso(todayTotal)} />
         </section>
 
-        <section className="grid gap-4 lg:grid-cols-[1fr_24rem]">
-          <div className="rounded-2xl border bg-card p-4 shadow-card">
+        <section className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_24rem]">
+          <div className="rounded-2xl border bg-card p-3 shadow-card sm:p-4">
             <div className="mb-3 flex items-center justify-between">
               <h2 className="font-bold">Live queue</h2>
               <Button asChild size="sm">
@@ -144,21 +146,26 @@ function BranchDashboard() {
               </Button>
             </div>
             <div className="space-y-2">
+              {active.length === 0 && (
+                <div className="rounded-xl border border-dashed p-4 text-center text-sm text-muted-foreground">
+                  No active orders
+                </div>
+              )}
               {active.slice(0, 6).map((order) => {
                 const urgency = orderUrgency(order);
                 return (
                   <Link
                     key={order.id}
                     to="/branch/orders"
-                    className="flex items-center justify-between rounded-xl border p-3 hover:border-primary"
+                    className="flex items-center justify-between gap-3 rounded-xl border p-3 hover:border-primary"
                   >
-                    <span>
-                      <span className="block font-bold">{order.number}</span>
-                      <span className="text-xs text-muted-foreground">
+                    <span className="min-w-0">
+                      <span className="block truncate font-bold">{order.number}</span>
+                      <span className="block truncate text-xs text-muted-foreground">
                         {order.items.length} item(s) · {order.customerName}
                       </span>
                     </span>
-                    <span className="flex flex-wrap justify-end gap-2">
+                    <span className="flex shrink-0 flex-wrap justify-end gap-2">
                       {urgency.level !== "normal" && (
                         <span className="rounded-full bg-warning-soft px-2 py-0.5 text-xs font-bold text-accent-foreground">
                           {urgency.label}
@@ -171,7 +178,7 @@ function BranchDashboard() {
               })}
             </div>
           </div>
-          <div className="rounded-2xl border bg-card p-4 shadow-card">
+          <div className="rounded-2xl border bg-card p-3 shadow-card sm:p-4">
             <div className="flex items-center justify-between gap-3">
               <h2 className="font-bold">Manager tools</h2>
               <Button asChild variant="outline" size="sm">
@@ -184,8 +191,8 @@ function BranchDashboard() {
                   <div className="mb-2 flex items-center gap-2 text-sm font-bold">
                     <PauseCircle className="h-4 w-4 text-primary" /> Intake
                   </div>
-                  <label className="flex items-center justify-between rounded-xl border p-3 text-sm">
-                    <span>
+                  <label className="flex min-h-16 items-center justify-between gap-3 rounded-xl border p-3 text-sm">
+                    <span className="min-w-0">
                       <span className="block font-semibold">Online orders</span>
                       <span className="text-xs text-muted-foreground">
                         Pause when the counter is overloaded.
@@ -205,7 +212,7 @@ function BranchDashboard() {
                   <div className="mb-2 flex items-center gap-2 text-sm font-bold">
                     <SlidersHorizontal className="h-4 w-4 text-primary" /> Branch settings
                   </div>
-                  <div className="grid gap-2 sm:grid-cols-3 lg:grid-cols-1">
+                  <div className="grid gap-2 sm:grid-cols-3 xl:grid-cols-1">
                     <NumberSetting
                       label="Prep minutes"
                       value={branch.prepMinutes}
@@ -228,16 +235,16 @@ function BranchDashboard() {
                   <div className="mb-2 flex items-center gap-2 text-sm font-bold">
                     <Coffee className="h-4 w-4 text-primary" /> Drink availability
                   </div>
-                  <div className="max-h-80 space-y-2 overflow-auto pr-1">
+                  <div className="max-h-[22rem] space-y-2 overflow-auto pr-1">
                     {state.products.map((product) => {
                       const soldOut = !!state.branchProducts[branch.id]?.[product.id]?.soldOut;
                       return (
                         <label
                           key={product.id}
-                          className="flex items-center justify-between gap-3 rounded-xl border p-3 text-sm"
+                          className="flex min-h-16 items-center justify-between gap-3 rounded-xl border p-3 text-sm"
                         >
-                          <span>
-                            <span className="block font-semibold">{product.name}</span>
+                          <span className="min-w-0">
+                            <span className="block truncate font-semibold">{product.name}</span>
                             <span className="text-xs text-muted-foreground">
                               {soldOut ? "Hidden from customers" : "Available online"}
                             </span>
@@ -270,12 +277,12 @@ function BranchDashboard() {
 
 function Metric({ icon, label, value }: { icon: ReactNode; label: string; value: string }) {
   return (
-    <div className="rounded-2xl border bg-card p-4 shadow-card">
-      <div className="mb-3 grid h-10 w-10 place-items-center rounded-xl bg-primary-soft text-primary">
+    <div className="rounded-2xl border bg-card p-3 shadow-card sm:p-4">
+      <div className="mb-2 grid h-9 w-9 place-items-center rounded-xl bg-primary-soft text-primary sm:mb-3 sm:h-10 sm:w-10">
         {icon}
       </div>
-      <p className="text-sm text-muted-foreground">{label}</p>
-      <p className="text-2xl font-extrabold">{value}</p>
+      <p className="text-xs text-muted-foreground sm:text-sm">{label}</p>
+      <p className="text-xl font-extrabold sm:text-2xl">{value}</p>
     </div>
   );
 }
