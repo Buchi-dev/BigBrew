@@ -14,14 +14,7 @@ import { Button } from "@/components/ui/button";
 import { ROLE_LABEL, useStore } from "@/lib/store";
 import type { Role } from "@/types";
 import { cn } from "@/lib/utils";
-
-const HOME: Record<Role, string> = {
-  customer: "/",
-  staff: "/branch/orders",
-  manager: "/branch",
-  admin: "/admin",
-  superadmin: "/admin",
-};
+import { roleHome } from "@/lib/permissions";
 
 export function DemoRoleSwitcher({ className }: { className?: string }) {
   const { state, currentUser, actions } = useStore();
@@ -34,7 +27,7 @@ export function DemoRoleSwitcher({ className }: { className?: string }) {
     actions.switchUser(userId);
     setOpen(false);
     toast.success(`Demo: now viewing as ${u.name}`, { description: ROLE_LABEL[u.role] });
-    navigate({ to: HOME[u.role] });
+    navigate({ to: roleHome(u.role) as never });
   };
 
   const staff = state.users.find((u) => u.role === "staff" && u.branchId === branch && u.active);

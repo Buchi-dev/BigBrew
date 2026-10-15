@@ -1,0 +1,6 @@
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { BranchStatus } from "@/components/shared";
+import { AdminResourcePage, DataCard } from "@/components/RoleShells";
+import { useStore } from "@/lib/store";
+export const Route = createFileRoute("/admin/branches")({ component: BranchesAdmin });
+function BranchesAdmin() { const { state } = useStore(); return <AdminResourcePage roles={["admin", "superadmin"]} title="Branches" description="Monitor every branch and drill into its operational workspace."><DataCard title={`${state.branches.length} branches`}><div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">{state.branches.map((branch) => <div key={branch.id} className="rounded-xl border p-4"><div className="flex items-start justify-between gap-2"><div><h2 className="font-bold">{branch.name}</h2><p className="text-xs text-muted-foreground">{branch.address}</p></div><BranchStatus branch={branch} ignoreHours={state.settings.ignoreHours} /></div><div className="mt-4 flex gap-2"><Link to="/branch" className="rounded-lg border px-3 py-2 text-xs font-semibold hover:border-primary">Open ops</Link><Link to="/branch/orders" className="rounded-lg bg-primary px-3 py-2 text-xs font-semibold text-primary-foreground">Orders</Link></div></div>)}</div></DataCard></AdminResourcePage>; }

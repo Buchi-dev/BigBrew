@@ -1,0 +1,7 @@
+import { createFileRoute } from "@tanstack/react-router";
+import { DataCard, PageHeader, RoleGuard, StatCard } from "@/components/RoleShells";
+import { useStore } from "@/lib/store";
+import { peso } from "@/lib/logic";
+import { BarChart3, ClipboardList } from "lucide-react";
+export const Route = createFileRoute("/manager/reports")({ component: ManagerReports });
+function ManagerReports() { const { state, currentUser } = useStore(); const orders = state.orders.filter((o) => o.branchId === currentUser.branchId); const sales = orders.filter((o) => o.status === "completed").reduce((sum, o) => sum + o.total, 0); return <RoleGuard roles={["manager"]}><PageHeader title="Branch reports" description="Review sales, order completion, and exception counts for your branch." /><section className="grid gap-3 sm:grid-cols-2"><StatCard icon={BarChart3} label="Completed sales" value={peso(sales)} /><StatCard icon={ClipboardList} label="Completed orders" value={String(orders.filter((o) => o.status === "completed").length)} /></section><div className="mt-5"><DataCard title="Order outcomes"><div className="grid grid-cols-2 gap-2 sm:grid-cols-4">{["completed", "rejected", "cancelled", "noshow"].map((status) => <div key={status} className="rounded-xl border p-3"><p className="text-xs capitalize text-muted-foreground">{status}</p><p className="text-2xl font-extrabold">{orders.filter((o) => o.status === status).length}</p></div>)}</div></DataCard></div></RoleGuard>; }

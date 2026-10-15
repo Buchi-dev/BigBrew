@@ -1,0 +1,6 @@
+import { createFileRoute } from "@tanstack/react-router";
+import { Activity, ShieldCheck, Users } from "lucide-react";
+import { AdminResourcePage, DataCard, StatCard } from "@/components/RoleShells";
+import { useStore } from "@/lib/store";
+export const Route = createFileRoute("/superadmin/")({ component: SuperOverview });
+function SuperOverview() { const { state } = useStore(); return <AdminResourcePage roles={["superadmin"]} title="Platform overview" description="Govern the full BigBrew platform, security model, and organization-wide health."><section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3"><StatCard icon={Activity} label="Audit events" value={String(state.audit.length)} /><StatCard icon={Users} label="Total users" value={String(state.users.length)} /><StatCard icon={ShieldCheck} label="Protected roles" value="5" /></section><div className="mt-5"><DataCard title="System alerts"><div className="space-y-2 text-sm text-muted-foreground"><p className="rounded-xl bg-success-soft p-3 text-success">All seeded branches are connected.</p><p className="rounded-xl bg-primary-soft p-3 text-primary-hover">Demo mode is enabled for role walkthroughs.</p></div></DataCard></div></AdminResourcePage>; }

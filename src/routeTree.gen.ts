@@ -12,14 +12,32 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as CustomerRouteImport } from './routes/_customer'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as BranchRouteImport } from './routes/branch'
+import { Route as ManagerRouteImport } from './routes/manager'
+import { Route as SuperadminRouteImport } from './routes/superadmin'
 import { Route as CustomerIndexRouteImport } from './routes/_customer.index'
 import { Route as CustomerBranchesRouteImport } from './routes/_customer.branches'
 import { Route as CustomerCartRouteImport } from './routes/_customer.cart'
 import { Route as CustomerCheckoutRouteImport } from './routes/_customer.checkout'
 import { Route as CustomerOrdersRouteImport } from './routes/_customer.orders'
 import { Route as CustomerProfileRouteImport } from './routes/_customer.profile'
+import { Route as AdminIndexRouteImport } from './routes/admin.index'
+import { Route as AdminBranchesRouteImport } from './routes/admin.branches'
+import { Route as AdminCatalogRouteImport } from './routes/admin.catalog'
+import { Route as AdminOrdersRouteImport } from './routes/admin.orders'
+import { Route as AdminReportsRouteImport } from './routes/admin.reports'
+import { Route as AdminUsersRouteImport } from './routes/admin.users'
 import { Route as BranchIndexRouteImport } from './routes/branch.index'
+import { Route as BranchAvailabilityRouteImport } from './routes/branch.availability'
 import { Route as BranchOrdersRouteImport } from './routes/branch.orders'
+import { Route as ManagerIndexRouteImport } from './routes/manager.index'
+import { Route as ManagerAvailabilityRouteImport } from './routes/manager.availability'
+import { Route as ManagerReportsRouteImport } from './routes/manager.reports'
+import { Route as ManagerSettingsRouteImport } from './routes/manager.settings'
+import { Route as ManagerStaffRouteImport } from './routes/manager.staff'
+import { Route as SuperadminIndexRouteImport } from './routes/superadmin.index'
+import { Route as SuperadminAuditRouteImport } from './routes/superadmin.audit'
+import { Route as SuperadminPermissionsRouteImport } from './routes/superadmin.permissions'
+import { Route as SuperadminSettingsRouteImport } from './routes/superadmin.settings'
 import { Route as CustomerMenuIndexRouteImport } from './routes/_customer.menu.index'
 import { Route as CustomerMenuProductIdRouteImport } from './routes/_customer.menu.$productId'
 import { Route as CustomerOrdersOrderIdRouteImport } from './routes/_customer.orders.$orderId'
@@ -36,6 +54,16 @@ const AdminRoute = AdminRouteImport.update({
 const BranchRoute = BranchRouteImport.update({
   id: '/branch',
   path: '/branch',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ManagerRoute = ManagerRouteImport.update({
+  id: '/manager',
+  path: '/manager',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SuperadminRoute = SuperadminRouteImport.update({
+  id: '/superadmin',
+  path: '/superadmin',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CustomerIndexRoute = CustomerIndexRouteImport.update({
@@ -68,15 +96,95 @@ const CustomerProfileRoute = CustomerProfileRouteImport.update({
   path: '/profile',
   getParentRoute: () => CustomerRoute,
 } as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminBranchesRoute = AdminBranchesRouteImport.update({
+  id: '/branches',
+  path: '/branches',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminCatalogRoute = AdminCatalogRouteImport.update({
+  id: '/catalog',
+  path: '/catalog',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminOrdersRoute = AdminOrdersRouteImport.update({
+  id: '/orders',
+  path: '/orders',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminReportsRoute = AdminReportsRouteImport.update({
+  id: '/reports',
+  path: '/reports',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminUsersRoute = AdminUsersRouteImport.update({
+  id: '/users',
+  path: '/users',
+  getParentRoute: () => AdminRoute,
+} as any)
 const BranchIndexRoute = BranchIndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => BranchRoute,
+} as any)
+const BranchAvailabilityRoute = BranchAvailabilityRouteImport.update({
+  id: '/availability',
+  path: '/availability',
   getParentRoute: () => BranchRoute,
 } as any)
 const BranchOrdersRoute = BranchOrdersRouteImport.update({
   id: '/orders',
   path: '/orders',
   getParentRoute: () => BranchRoute,
+} as any)
+const ManagerIndexRoute = ManagerIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ManagerRoute,
+} as any)
+const ManagerAvailabilityRoute = ManagerAvailabilityRouteImport.update({
+  id: '/availability',
+  path: '/availability',
+  getParentRoute: () => ManagerRoute,
+} as any)
+const ManagerReportsRoute = ManagerReportsRouteImport.update({
+  id: '/reports',
+  path: '/reports',
+  getParentRoute: () => ManagerRoute,
+} as any)
+const ManagerSettingsRoute = ManagerSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => ManagerRoute,
+} as any)
+const ManagerStaffRoute = ManagerStaffRouteImport.update({
+  id: '/staff',
+  path: '/staff',
+  getParentRoute: () => ManagerRoute,
+} as any)
+const SuperadminIndexRoute = SuperadminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => SuperadminRoute,
+} as any)
+const SuperadminAuditRoute = SuperadminAuditRouteImport.update({
+  id: '/audit',
+  path: '/audit',
+  getParentRoute: () => SuperadminRoute,
+} as any)
+const SuperadminPermissionsRoute = SuperadminPermissionsRouteImport.update({
+  id: '/permissions',
+  path: '/permissions',
+  getParentRoute: () => SuperadminRoute,
+} as any)
+const SuperadminSettingsRoute = SuperadminSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => SuperadminRoute,
 } as any)
 const CustomerMenuIndexRoute = CustomerMenuIndexRouteImport.update({
   id: '/menu/',
@@ -96,29 +204,62 @@ const CustomerOrdersOrderIdRoute = CustomerOrdersOrderIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof CustomerIndexRoute
-  '/admin': typeof AdminRoute
+  '/admin': typeof AdminRouteWithChildren
   '/branch': typeof BranchRouteWithChildren
+  '/manager': typeof ManagerRouteWithChildren
+  '/superadmin': typeof SuperadminRouteWithChildren
   '/branches': typeof CustomerBranchesRoute
   '/cart': typeof CustomerCartRoute
   '/checkout': typeof CustomerCheckoutRoute
   '/orders': typeof CustomerOrdersRouteWithChildren
   '/profile': typeof CustomerProfileRoute
+  '/admin/branches': typeof AdminBranchesRoute
+  '/admin/catalog': typeof AdminCatalogRoute
+  '/admin/orders': typeof AdminOrdersRoute
+  '/admin/reports': typeof AdminReportsRoute
+  '/admin/users': typeof AdminUsersRoute
+  '/branch/availability': typeof BranchAvailabilityRoute
   '/branch/orders': typeof BranchOrdersRoute
+  '/manager/availability': typeof ManagerAvailabilityRoute
+  '/manager/reports': typeof ManagerReportsRoute
+  '/manager/settings': typeof ManagerSettingsRoute
+  '/manager/staff': typeof ManagerStaffRoute
+  '/superadmin/audit': typeof SuperadminAuditRoute
+  '/superadmin/permissions': typeof SuperadminPermissionsRoute
+  '/superadmin/settings': typeof SuperadminSettingsRoute
+  '/admin/': typeof AdminIndexRoute
   '/branch/': typeof BranchIndexRoute
+  '/manager/': typeof ManagerIndexRoute
+  '/superadmin/': typeof SuperadminIndexRoute
   '/menu/$productId': typeof CustomerMenuProductIdRoute
   '/orders/$orderId': typeof CustomerOrdersOrderIdRoute
   '/menu/': typeof CustomerMenuIndexRoute
 }
 export interface FileRoutesByTo {
-  '/admin': typeof AdminRoute
   '/branches': typeof CustomerBranchesRoute
   '/cart': typeof CustomerCartRoute
   '/checkout': typeof CustomerCheckoutRoute
   '/orders': typeof CustomerOrdersRouteWithChildren
   '/profile': typeof CustomerProfileRoute
+  '/admin/branches': typeof AdminBranchesRoute
+  '/admin/catalog': typeof AdminCatalogRoute
+  '/admin/orders': typeof AdminOrdersRoute
+  '/admin/reports': typeof AdminReportsRoute
+  '/admin/users': typeof AdminUsersRoute
+  '/branch/availability': typeof BranchAvailabilityRoute
   '/branch/orders': typeof BranchOrdersRoute
+  '/manager/availability': typeof ManagerAvailabilityRoute
+  '/manager/reports': typeof ManagerReportsRoute
+  '/manager/settings': typeof ManagerSettingsRoute
+  '/manager/staff': typeof ManagerStaffRoute
+  '/superadmin/audit': typeof SuperadminAuditRoute
+  '/superadmin/permissions': typeof SuperadminPermissionsRoute
+  '/superadmin/settings': typeof SuperadminSettingsRoute
   '/': typeof CustomerIndexRoute
+  '/admin': typeof AdminIndexRoute
   '/branch': typeof BranchIndexRoute
+  '/manager': typeof ManagerIndexRoute
+  '/superadmin': typeof SuperadminIndexRoute
   '/menu/$productId': typeof CustomerMenuProductIdRoute
   '/orders/$orderId': typeof CustomerOrdersOrderIdRoute
   '/menu': typeof CustomerMenuIndexRoute
@@ -126,16 +267,34 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_customer': typeof CustomerRouteWithChildren
-  '/admin': typeof AdminRoute
+  '/admin': typeof AdminRouteWithChildren
   '/branch': typeof BranchRouteWithChildren
+  '/manager': typeof ManagerRouteWithChildren
+  '/superadmin': typeof SuperadminRouteWithChildren
   '/_customer/branches': typeof CustomerBranchesRoute
   '/_customer/cart': typeof CustomerCartRoute
   '/_customer/checkout': typeof CustomerCheckoutRoute
   '/_customer/orders': typeof CustomerOrdersRouteWithChildren
   '/_customer/profile': typeof CustomerProfileRoute
+  '/admin/branches': typeof AdminBranchesRoute
+  '/admin/catalog': typeof AdminCatalogRoute
+  '/admin/orders': typeof AdminOrdersRoute
+  '/admin/reports': typeof AdminReportsRoute
+  '/admin/users': typeof AdminUsersRoute
+  '/branch/availability': typeof BranchAvailabilityRoute
   '/branch/orders': typeof BranchOrdersRoute
+  '/manager/availability': typeof ManagerAvailabilityRoute
+  '/manager/reports': typeof ManagerReportsRoute
+  '/manager/settings': typeof ManagerSettingsRoute
+  '/manager/staff': typeof ManagerStaffRoute
+  '/superadmin/audit': typeof SuperadminAuditRoute
+  '/superadmin/permissions': typeof SuperadminPermissionsRoute
+  '/superadmin/settings': typeof SuperadminSettingsRoute
   '/_customer/': typeof CustomerIndexRoute
+  '/admin/': typeof AdminIndexRoute
   '/branch/': typeof BranchIndexRoute
+  '/manager/': typeof ManagerIndexRoute
+  '/superadmin/': typeof SuperadminIndexRoute
   '/_customer/menu/$productId': typeof CustomerMenuProductIdRoute
   '/_customer/orders/$orderId': typeof CustomerOrdersOrderIdRoute
   '/_customer/menu/': typeof CustomerMenuIndexRoute
@@ -146,27 +305,60 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/branch'
+    | '/manager'
+    | '/superadmin'
     | '/branches'
     | '/cart'
     | '/checkout'
     | '/orders'
     | '/profile'
+    | '/admin/branches'
+    | '/admin/catalog'
+    | '/admin/orders'
+    | '/admin/reports'
+    | '/admin/users'
+    | '/branch/availability'
     | '/branch/orders'
+    | '/manager/availability'
+    | '/manager/reports'
+    | '/manager/settings'
+    | '/manager/staff'
+    | '/superadmin/audit'
+    | '/superadmin/permissions'
+    | '/superadmin/settings'
+    | '/admin/'
     | '/branch/'
+    | '/manager/'
+    | '/superadmin/'
     | '/menu/$productId'
     | '/orders/$orderId'
     | '/menu/'
   fileRoutesByTo: FileRoutesByTo
   to:
-    | '/admin'
     | '/branches'
     | '/cart'
     | '/checkout'
     | '/orders'
     | '/profile'
+    | '/admin/branches'
+    | '/admin/catalog'
+    | '/admin/orders'
+    | '/admin/reports'
+    | '/admin/users'
+    | '/branch/availability'
     | '/branch/orders'
+    | '/manager/availability'
+    | '/manager/reports'
+    | '/manager/settings'
+    | '/manager/staff'
+    | '/superadmin/audit'
+    | '/superadmin/permissions'
+    | '/superadmin/settings'
     | '/'
+    | '/admin'
     | '/branch'
+    | '/manager'
+    | '/superadmin'
     | '/menu/$productId'
     | '/orders/$orderId'
     | '/menu'
@@ -175,14 +367,32 @@ export interface FileRouteTypes {
     | '/_customer'
     | '/admin'
     | '/branch'
+    | '/manager'
+    | '/superadmin'
     | '/_customer/branches'
     | '/_customer/cart'
     | '/_customer/checkout'
     | '/_customer/orders'
     | '/_customer/profile'
+    | '/admin/branches'
+    | '/admin/catalog'
+    | '/admin/orders'
+    | '/admin/reports'
+    | '/admin/users'
+    | '/branch/availability'
     | '/branch/orders'
+    | '/manager/availability'
+    | '/manager/reports'
+    | '/manager/settings'
+    | '/manager/staff'
+    | '/superadmin/audit'
+    | '/superadmin/permissions'
+    | '/superadmin/settings'
     | '/_customer/'
+    | '/admin/'
     | '/branch/'
+    | '/manager/'
+    | '/superadmin/'
     | '/_customer/menu/$productId'
     | '/_customer/orders/$orderId'
     | '/_customer/menu/'
@@ -190,8 +400,10 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   CustomerRoute: typeof CustomerRouteWithChildren
-  AdminRoute: typeof AdminRoute
+  AdminRoute: typeof AdminRouteWithChildren
   BranchRoute: typeof BranchRouteWithChildren
+  ManagerRoute: typeof ManagerRouteWithChildren
+  SuperadminRoute: typeof SuperadminRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -215,6 +427,20 @@ declare module '@tanstack/react-router' {
       path: '/branch'
       fullPath: '/branch'
       preLoaderRoute: typeof BranchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/manager': {
+      id: '/manager'
+      path: '/manager'
+      fullPath: '/manager'
+      preLoaderRoute: typeof ManagerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/superadmin': {
+      id: '/superadmin'
+      path: '/superadmin'
+      fullPath: '/superadmin'
+      preLoaderRoute: typeof SuperadminRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_customer/': {
@@ -259,11 +485,60 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CustomerProfileRouteImport
       parentRoute: typeof CustomerRoute
     }
+    '/admin/': {
+      id: '/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/branches': {
+      id: '/admin/branches'
+      path: '/branches'
+      fullPath: '/admin/branches'
+      preLoaderRoute: typeof AdminBranchesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/catalog': {
+      id: '/admin/catalog'
+      path: '/catalog'
+      fullPath: '/admin/catalog'
+      preLoaderRoute: typeof AdminCatalogRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/orders': {
+      id: '/admin/orders'
+      path: '/orders'
+      fullPath: '/admin/orders'
+      preLoaderRoute: typeof AdminOrdersRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/reports': {
+      id: '/admin/reports'
+      path: '/reports'
+      fullPath: '/admin/reports'
+      preLoaderRoute: typeof AdminReportsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/users': {
+      id: '/admin/users'
+      path: '/users'
+      fullPath: '/admin/users'
+      preLoaderRoute: typeof AdminUsersRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/branch/': {
       id: '/branch/'
       path: '/'
       fullPath: '/branch/'
       preLoaderRoute: typeof BranchIndexRouteImport
+      parentRoute: typeof BranchRoute
+    }
+    '/branch/availability': {
+      id: '/branch/availability'
+      path: '/availability'
+      fullPath: '/branch/availability'
+      preLoaderRoute: typeof BranchAvailabilityRouteImport
       parentRoute: typeof BranchRoute
     }
     '/branch/orders': {
@@ -272,6 +547,69 @@ declare module '@tanstack/react-router' {
       fullPath: '/branch/orders'
       preLoaderRoute: typeof BranchOrdersRouteImport
       parentRoute: typeof BranchRoute
+    }
+    '/manager/': {
+      id: '/manager/'
+      path: '/'
+      fullPath: '/manager/'
+      preLoaderRoute: typeof ManagerIndexRouteImport
+      parentRoute: typeof ManagerRoute
+    }
+    '/manager/availability': {
+      id: '/manager/availability'
+      path: '/availability'
+      fullPath: '/manager/availability'
+      preLoaderRoute: typeof ManagerAvailabilityRouteImport
+      parentRoute: typeof ManagerRoute
+    }
+    '/manager/reports': {
+      id: '/manager/reports'
+      path: '/reports'
+      fullPath: '/manager/reports'
+      preLoaderRoute: typeof ManagerReportsRouteImport
+      parentRoute: typeof ManagerRoute
+    }
+    '/manager/settings': {
+      id: '/manager/settings'
+      path: '/settings'
+      fullPath: '/manager/settings'
+      preLoaderRoute: typeof ManagerSettingsRouteImport
+      parentRoute: typeof ManagerRoute
+    }
+    '/manager/staff': {
+      id: '/manager/staff'
+      path: '/staff'
+      fullPath: '/manager/staff'
+      preLoaderRoute: typeof ManagerStaffRouteImport
+      parentRoute: typeof ManagerRoute
+    }
+    '/superadmin/': {
+      id: '/superadmin/'
+      path: '/'
+      fullPath: '/superadmin/'
+      preLoaderRoute: typeof SuperadminIndexRouteImport
+      parentRoute: typeof SuperadminRoute
+    }
+    '/superadmin/audit': {
+      id: '/superadmin/audit'
+      path: '/audit'
+      fullPath: '/superadmin/audit'
+      preLoaderRoute: typeof SuperadminAuditRouteImport
+      parentRoute: typeof SuperadminRoute
+    }
+    '/superadmin/permissions': {
+      id: '/superadmin/permissions'
+      path: '/permissions'
+      fullPath: '/superadmin/permissions'
+      preLoaderRoute: typeof SuperadminPermissionsRouteImport
+      parentRoute: typeof SuperadminRoute
+    }
+    '/superadmin/settings': {
+      id: '/superadmin/settings'
+      path: '/settings'
+      fullPath: '/superadmin/settings'
+      preLoaderRoute: typeof SuperadminSettingsRouteImport
+      parentRoute: typeof SuperadminRoute
     }
     '/_customer/menu/': {
       id: '/_customer/menu/'
@@ -335,12 +673,34 @@ const CustomerRouteWithChildren = CustomerRoute._addFileChildren(
   CustomerRouteChildren,
 )
 
+interface AdminRouteChildren {
+  AdminBranchesRoute: typeof AdminBranchesRoute
+  AdminCatalogRoute: typeof AdminCatalogRoute
+  AdminOrdersRoute: typeof AdminOrdersRoute
+  AdminReportsRoute: typeof AdminReportsRoute
+  AdminUsersRoute: typeof AdminUsersRoute
+  AdminIndexRoute: typeof AdminIndexRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminBranchesRoute: AdminBranchesRoute,
+  AdminCatalogRoute: AdminCatalogRoute,
+  AdminOrdersRoute: AdminOrdersRoute,
+  AdminReportsRoute: AdminReportsRoute,
+  AdminUsersRoute: AdminUsersRoute,
+  AdminIndexRoute: AdminIndexRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+
 interface BranchRouteChildren {
+  BranchAvailabilityRoute: typeof BranchAvailabilityRoute
   BranchOrdersRoute: typeof BranchOrdersRoute
   BranchIndexRoute: typeof BranchIndexRoute
 }
 
 const BranchRouteChildren: BranchRouteChildren = {
+  BranchAvailabilityRoute: BranchAvailabilityRoute,
   BranchOrdersRoute: BranchOrdersRoute,
   BranchIndexRoute: BranchIndexRoute,
 }
@@ -348,10 +708,49 @@ const BranchRouteChildren: BranchRouteChildren = {
 const BranchRouteWithChildren =
   BranchRoute._addFileChildren(BranchRouteChildren)
 
+interface ManagerRouteChildren {
+  ManagerAvailabilityRoute: typeof ManagerAvailabilityRoute
+  ManagerReportsRoute: typeof ManagerReportsRoute
+  ManagerSettingsRoute: typeof ManagerSettingsRoute
+  ManagerStaffRoute: typeof ManagerStaffRoute
+  ManagerIndexRoute: typeof ManagerIndexRoute
+}
+
+const ManagerRouteChildren: ManagerRouteChildren = {
+  ManagerAvailabilityRoute: ManagerAvailabilityRoute,
+  ManagerReportsRoute: ManagerReportsRoute,
+  ManagerSettingsRoute: ManagerSettingsRoute,
+  ManagerStaffRoute: ManagerStaffRoute,
+  ManagerIndexRoute: ManagerIndexRoute,
+}
+
+const ManagerRouteWithChildren =
+  ManagerRoute._addFileChildren(ManagerRouteChildren)
+
+interface SuperadminRouteChildren {
+  SuperadminAuditRoute: typeof SuperadminAuditRoute
+  SuperadminPermissionsRoute: typeof SuperadminPermissionsRoute
+  SuperadminSettingsRoute: typeof SuperadminSettingsRoute
+  SuperadminIndexRoute: typeof SuperadminIndexRoute
+}
+
+const SuperadminRouteChildren: SuperadminRouteChildren = {
+  SuperadminAuditRoute: SuperadminAuditRoute,
+  SuperadminPermissionsRoute: SuperadminPermissionsRoute,
+  SuperadminSettingsRoute: SuperadminSettingsRoute,
+  SuperadminIndexRoute: SuperadminIndexRoute,
+}
+
+const SuperadminRouteWithChildren = SuperadminRoute._addFileChildren(
+  SuperadminRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   CustomerRoute: CustomerRouteWithChildren,
-  AdminRoute: AdminRoute,
+  AdminRoute: AdminRouteWithChildren,
   BranchRoute: BranchRouteWithChildren,
+  ManagerRoute: ManagerRouteWithChildren,
+  SuperadminRoute: SuperadminRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

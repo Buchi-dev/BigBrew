@@ -64,6 +64,9 @@ function BranchDashboard() {
           </span>
           <div className="ml-auto flex items-center gap-2">
             <Button asChild variant="outline" size="sm">
+              <Link to="/branch/availability">Availability</Link>
+            </Button>
+            <Button asChild variant="outline" size="sm">
               <Link to="/branch/orders">Order board</Link>
             </Button>
             <DemoRoleSwitcher />

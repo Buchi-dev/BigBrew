@@ -1,0 +1,7 @@
+import { createFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { DataCard, PageHeader, RoleGuard } from "@/components/RoleShells";
+import { useStore } from "@/lib/store";
+export const Route = createFileRoute("/manager/settings")({ component: ManagerSettings });
+function ManagerSettings() { const { state, currentUser, actions } = useStore(); const branch = state.branches.find((b) => b.id === currentUser.branchId) ?? state.branches[0]!; const [prep, setPrep] = useState(String(branch.prepMinutes)); return <RoleGuard roles={["manager"]}><PageHeader title="Branch settings" description="Control intake, preparation, and queue defaults for your assigned branch." /><DataCard title={branch.name}><div className="grid max-w-xl gap-4"><label className="flex items-center justify-between gap-4 rounded-xl border p-3 text-sm font-semibold">Accept online orders<input type="checkbox" checked={branch.accepting} onChange={(e) => actions.updateBranch(branch.id, { accepting: e.target.checked })} className="h-5 w-5 accent-primary" /></label><label className="grid gap-1 text-sm font-semibold">Preparation minutes<input value={prep} onChange={(e) => setPrep(e.target.value)} className="h-11 rounded-lg border bg-background px-3" inputMode="numeric" /></label><Button onClick={() => actions.updateBranch(branch.id, { prepMinutes: Math.max(1, Number(prep) || branch.prepMinutes) })}>Save branch settings</Button></div></DataCard></RoleGuard>; }

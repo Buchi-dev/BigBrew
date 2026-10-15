@@ -108,6 +108,32 @@ describe("App routing", () => {
     expect(screen.getByText(/Drink availability/i)).toBeInTheDocument();
   });
 
+  it("renders the manager workspace for a manager session", async () => {
+    window.localStorage.setItem(
+      "bigbrew-demo-v1",
+      JSON.stringify({ session: { userId: "u-mgr3" } }),
+    );
+    await renderPath("/manager");
+
+    await waitFor(() =>
+      expect(screen.getByRole("heading", { name: /manager dashboard/i })).toBeInTheDocument(),
+    );
+    expect(screen.getByRole("link", { name: "Branch settings" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Reports" })).toBeInTheDocument();
+  });
+
+  it("blocks an administrator from the Super Admin workspace", async () => {
+    window.localStorage.setItem(
+      "bigbrew-demo-v1",
+      JSON.stringify({ session: { userId: "u-admin" } }),
+    );
+    await renderPath("/superadmin/permissions");
+
+    await waitFor(() =>
+      expect(screen.getByRole("heading", { name: "Access restricted" })).toBeInTheDocument(),
+    );
+  });
+
   it("renders the branch order board lanes", async () => {
     await renderPath("/branch/orders");
 

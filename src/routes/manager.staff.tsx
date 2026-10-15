@@ -1,0 +1,5 @@
+import { createFileRoute } from "@tanstack/react-router";
+import { DataCard, PageHeader, RoleGuard } from "@/components/RoleShells";
+import { useStore } from "@/lib/store";
+export const Route = createFileRoute("/manager/staff")({ component: ManagerStaff });
+function ManagerStaff() { const { state, currentUser } = useStore(); const staff = state.users.filter((u) => u.branchId === currentUser.branchId && (u.role === "staff" || u.role === "manager")); return <RoleGuard roles={["manager"]}><PageHeader title="Branch staff" description="View the team assigned to your branch and their current account status." /><DataCard title={`${staff.length} assigned team member(s)`}><div className="grid gap-2 sm:grid-cols-2">{staff.map((user) => <div key={user.id} className="rounded-xl border p-3"><div className="flex items-center justify-between gap-2"><span className="font-semibold">{user.name}</span><span className="rounded-full bg-success-soft px-2 py-0.5 text-xs font-semibold text-success">{user.active ? "Active" : "Inactive"}</span></div><p className="mt-1 text-xs text-muted-foreground">{user.email} · {user.role}</p></div>)}</div></DataCard></RoleGuard>; }

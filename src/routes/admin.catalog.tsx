@@ -1,0 +1,5 @@
+import { createFileRoute } from "@tanstack/react-router";
+import { AdminResourcePage, DataCard } from "@/components/RoleShells";
+import { useStore } from "@/lib/store";
+export const Route = createFileRoute("/admin/catalog")({ component: CatalogAdmin });
+function CatalogAdmin() { const { state } = useStore(); return <AdminResourcePage roles={["admin", "superadmin"]} title="Products & categories" description="Manage the global drink catalog, categories, and product availability defaults."><DataCard title={`${state.products.length} products`}><div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">{state.products.map((product) => <div key={product.id} className="rounded-xl border p-3"><div className="flex items-center justify-between gap-2"><span className="font-semibold">{product.name}</span><span className={`rounded-full px-2 py-0.5 text-xs font-bold ${product.enabled ? "bg-success-soft text-success" : "bg-muted text-muted-foreground"}`}>{product.enabled ? "Enabled" : "Disabled"}</span></div><p className="mt-1 text-xs text-muted-foreground">{state.categories.find((c) => c.id === product.categoryId)?.name}</p></div>)}</div></DataCard></AdminResourcePage>; }
