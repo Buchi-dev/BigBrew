@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { CheckCircle2, ClipboardList, KeyRound, Wallet } from "lucide-react";
-import { useState } from "react";
+import { useId, useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -37,6 +37,11 @@ function BranchOrders() {
   const activeCount = ORDER_LANES.reduce((sum, status) => sum + lanes[status].length, 0);
   const firstActiveLane = ORDER_LANES.find((status) => lanes[status].length > 0) ?? ORDER_LANES[0]!;
   const [mobileLane, setMobileLane] = useState<OrderStatus>(firstActiveLane);
+  const transition = (orderId: string, to: OrderStatus) => {
+    const error = actions.transition(orderId, to);
+    if (!error && ORDER_LANES.includes(to)) setMobileLane(to);
+    return error;
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -92,7 +97,7 @@ function BranchOrders() {
                   <OrderLane
                     status={status}
                     orderIds={lanes[status].map((order) => order.id)}
-                    onTransition={actions.transition}
+                    onTransition={transition}
                     onPay={actions.recordPayment}
                     onVerify={actions.verifyPickup}
                   />
@@ -106,7 +111,7 @@ function BranchOrders() {
                   key={status}
                   status={status}
                   orderIds={lanes[status].map((order) => order.id)}
-                  onTransition={actions.transition}
+                  onTransition={transition}
                   onPay={actions.recordPayment}
                   onVerify={actions.verifyPickup}
                   desktop
@@ -136,7 +141,7 @@ function OrderLane({
   desktop?: boolean;
 }) {
   return (
-    <section className="rounded-2xl border bg-card p-3 shadow-card">
+    <section className="min-w-0 rounded-2xl border bg-card p-3 shadow-card">
       <div className="mb-3 flex items-center justify-between gap-2">
         <div className="min-w-0">
           <h2 className="truncate font-bold">{STATUS_LABEL[status]}</h2>
@@ -181,10 +186,28 @@ function OrderCard({
   const order = state.orders.find((o) => o.id === orderId)!;
   const [cash, setCash] = useState(String(Math.ceil(order.total / 50) * 50));
   const [code, setCode] = useState("");
-  const due = changeDue(order.total, Number(cash));
+  const [codeError, setCodeError] = useState("");
+  const [expanded, setExpanded] = useState(false);
+  const fieldId = useId();
+  const due = cash.trim() ? changeDue(order.total, Number(cash)) : null;
+  const ready = order.status === "ready";
+  const paid = order.paymentStatus === "paid";
+  const cashError = due === null ? "Enter a valid cash amount covering the total." : "";
+  const instruction =
+    order.status === "pending"
+      ? "Review the order, then accept or reject it."
+      : order.status === "accepted"
+        ? "Start preparation when the team is ready."
+        : order.status === "preparing"
+          ? "Mark ready once all items are prepared."
+          : !paid
+            ? "Collect cash when the customer arrives."
+            : !order.pickupVerified
+              ? "Ask the customer for their pickup code."
+              : "Hand over the order, then complete it.";
   const urgency = orderUrgency(order);
   const nextActions = nextStatuses(order.status);
-  const primaryAction = nextActions[0];
+  const primaryAction = ready && (!paid || !order.pickupVerified) ? undefined : nextActions[0];
   const secondaryActions = nextActions.slice(1);
   const extraItems = Math.max(0, order.items.length - 1);
 
@@ -221,7 +244,7 @@ function OrderCard({
       </div>
 
       <div className="mt-3 space-y-1 text-sm">
-        {order.items.slice(0, 1).map((item, index) => (
+        {order.items.slice(0, expanded ? undefined : 1).map((item, index) => (
           <p key={`${item.productId}-${index}`} className="leading-snug">
             <span className="font-semibold">
               {item.qty}x {item.name}
@@ -234,9 +257,16 @@ function OrderCard({
           </p>
         ))}
         {extraItems > 0 && (
-          <p className="text-xs font-semibold text-muted-foreground">
-            +{extraItems} more item{extraItems === 1 ? "" : "s"}
-          </p>
+          <button
+            type="button"
+            aria-expanded={expanded}
+            onClick={() => setExpanded(!expanded)}
+            className="min-h-11 text-left text-xs font-semibold text-primary underline underline-offset-4"
+          >
+            {expanded
+              ? "Show fewer items"
+              : `+${extraItems} more item${extraItems === 1 ? "" : "s"}`}
+          </button>
         )}
       </div>
 
@@ -245,53 +275,97 @@ function OrderCard({
           <span>Total</span>
           <span>{peso(order.total)}</span>
         </div>
-        {order.paymentStatus === "unpaid" && (
-          <div className="mt-3 grid gap-2">
-            <Input
-              value={cash}
-              onChange={(e) => setCash(e.target.value)}
-              inputMode="decimal"
-              aria-label="Cash received"
-              className="h-11"
-            />
-            <Button
-              type="button"
-              className="min-h-11"
-              onClick={() => {
-                onPay(order.id, Number(cash));
-                toast.success(
-                  due !== null ? `Payment recorded. Change: ${peso(due)}` : "Payment recorded",
-                );
-              }}
-              disabled={due === null}
-            >
-              <Wallet /> Record cash
-            </Button>
+        {paid && (
+          <div className="mt-2 space-y-1 text-sm text-muted-foreground">
+            <p className="flex items-center gap-1 font-semibold">
+              <CheckCircle2 className="h-4 w-4 shrink-0" /> Payment recorded
+            </p>
+            {order.amountReceived !== undefined && (
+              <>
+                <p>Cash received: {peso(order.amountReceived)}</p>
+                <p>Change: {peso(changeDue(order.total, order.amountReceived) ?? 0)}</p>
+              </>
+            )}
           </div>
         )}
       </div>
 
-      {!order.pickupVerified && (
-        <div className="mt-3 grid gap-2 sm:grid-cols-[1fr_auto]">
+      <p className="mt-3 text-sm text-muted-foreground">{instruction}</p>
+
+      {ready && !paid && (
+        <form
+          className="mt-3 grid gap-2"
+          onSubmit={(event) => {
+            event.preventDefault();
+            if (due === null) return;
+            onPay(order.id, Number(cash));
+            toast.success(`Payment recorded. Change: ${peso(due)}`);
+          }}
+        >
+          <label htmlFor={`${fieldId}-cash`} className="text-sm font-semibold">
+            Cash received
+          </label>
           <Input
-            value={code}
-            onChange={(e) => setCode(e.target.value)}
-            placeholder="Pickup code"
-            inputMode="numeric"
+            id={`${fieldId}-cash`}
+            value={cash}
+            onChange={(e) => setCash(e.target.value)}
+            inputMode="decimal"
+            aria-invalid={due === null}
+            aria-describedby={`${fieldId}-cash-feedback`}
             className="h-11"
           />
-          <Button
-            type="button"
-            variant="outline"
-            className="min-h-11"
-            onClick={() => {
-              const ok = onVerify(order.id, code);
-              toast[ok ? "success" : "error"](ok ? "Pickup code verified" : "Wrong pickup code");
-            }}
+          <p
+            id={`${fieldId}-cash-feedback`}
+            className={`text-xs ${cashError ? "text-destructive" : "text-muted-foreground"}`}
           >
+            {cashError || `Change due: ${peso(due!)}`}
+          </p>
+          <Button type="submit" className="min-h-11" disabled={due === null}>
+            <Wallet /> Record cash
+          </Button>
+        </form>
+      )}
+
+      {ready && paid && !order.pickupVerified && (
+        <form
+          className="mt-3 grid gap-2"
+          onSubmit={(event) => {
+            event.preventDefault();
+            const ok = onVerify(order.id, code);
+            setCodeError(ok ? "" : "Wrong pickup code. Check the code and try again.");
+            if (ok) toast.success("Pickup code verified");
+          }}
+        >
+          <label htmlFor={`${fieldId}-code`} className="text-sm font-semibold">
+            Pickup code
+          </label>
+          <Input
+            id={`${fieldId}-code`}
+            value={code}
+            onChange={(e) => {
+              setCode(e.target.value);
+              setCodeError("");
+            }}
+            placeholder="Pickup code"
+            inputMode="numeric"
+            aria-invalid={!!codeError}
+            aria-describedby={codeError ? `${fieldId}-code-error` : undefined}
+            className="h-11"
+          />
+          {codeError && (
+            <p id={`${fieldId}-code-error`} role="alert" className="text-xs text-destructive">
+              {codeError}
+            </p>
+          )}
+          <Button type="submit" className="min-h-11" disabled={!code.trim()}>
             <KeyRound /> Verify
           </Button>
-        </div>
+        </form>
+      )}
+      {ready && order.pickupVerified && (
+        <p className="mt-3 flex items-center gap-1 text-sm font-semibold">
+          <CheckCircle2 className="h-4 w-4 shrink-0" /> Pickup code verified
+        </p>
       )}
 
       <div className="mt-3 grid gap-2">

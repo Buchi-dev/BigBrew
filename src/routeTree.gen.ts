@@ -18,6 +18,7 @@ import { Route as CustomerCartRouteImport } from './routes/_customer.cart'
 import { Route as CustomerCheckoutRouteImport } from './routes/_customer.checkout'
 import { Route as CustomerOrdersRouteImport } from './routes/_customer.orders'
 import { Route as CustomerProfileRouteImport } from './routes/_customer.profile'
+import { Route as BranchIndexRouteImport } from './routes/branch.index'
 import { Route as BranchOrdersRouteImport } from './routes/branch.orders'
 import { Route as CustomerMenuIndexRouteImport } from './routes/_customer.menu.index'
 import { Route as CustomerMenuProductIdRouteImport } from './routes/_customer.menu.$productId'
@@ -67,6 +68,11 @@ const CustomerProfileRoute = CustomerProfileRouteImport.update({
   path: '/profile',
   getParentRoute: () => CustomerRoute,
 } as any)
+const BranchIndexRoute = BranchIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => BranchRoute,
+} as any)
 const BranchOrdersRoute = BranchOrdersRouteImport.update({
   id: '/orders',
   path: '/orders',
@@ -98,13 +104,13 @@ export interface FileRoutesByFullPath {
   '/orders': typeof CustomerOrdersRouteWithChildren
   '/profile': typeof CustomerProfileRoute
   '/branch/orders': typeof BranchOrdersRoute
+  '/branch/': typeof BranchIndexRoute
   '/menu/$productId': typeof CustomerMenuProductIdRoute
   '/orders/$orderId': typeof CustomerOrdersOrderIdRoute
   '/menu/': typeof CustomerMenuIndexRoute
 }
 export interface FileRoutesByTo {
   '/admin': typeof AdminRoute
-  '/branch': typeof BranchRouteWithChildren
   '/branches': typeof CustomerBranchesRoute
   '/cart': typeof CustomerCartRoute
   '/checkout': typeof CustomerCheckoutRoute
@@ -112,6 +118,7 @@ export interface FileRoutesByTo {
   '/profile': typeof CustomerProfileRoute
   '/branch/orders': typeof BranchOrdersRoute
   '/': typeof CustomerIndexRoute
+  '/branch': typeof BranchIndexRoute
   '/menu/$productId': typeof CustomerMenuProductIdRoute
   '/orders/$orderId': typeof CustomerOrdersOrderIdRoute
   '/menu': typeof CustomerMenuIndexRoute
@@ -128,6 +135,7 @@ export interface FileRoutesById {
   '/_customer/profile': typeof CustomerProfileRoute
   '/branch/orders': typeof BranchOrdersRoute
   '/_customer/': typeof CustomerIndexRoute
+  '/branch/': typeof BranchIndexRoute
   '/_customer/menu/$productId': typeof CustomerMenuProductIdRoute
   '/_customer/orders/$orderId': typeof CustomerOrdersOrderIdRoute
   '/_customer/menu/': typeof CustomerMenuIndexRoute
@@ -144,13 +152,13 @@ export interface FileRouteTypes {
     | '/orders'
     | '/profile'
     | '/branch/orders'
+    | '/branch/'
     | '/menu/$productId'
     | '/orders/$orderId'
     | '/menu/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/admin'
-    | '/branch'
     | '/branches'
     | '/cart'
     | '/checkout'
@@ -158,6 +166,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/branch/orders'
     | '/'
+    | '/branch'
     | '/menu/$productId'
     | '/orders/$orderId'
     | '/menu'
@@ -173,6 +182,7 @@ export interface FileRouteTypes {
     | '/_customer/profile'
     | '/branch/orders'
     | '/_customer/'
+    | '/branch/'
     | '/_customer/menu/$productId'
     | '/_customer/orders/$orderId'
     | '/_customer/menu/'
@@ -249,6 +259,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CustomerProfileRouteImport
       parentRoute: typeof CustomerRoute
     }
+    '/branch/': {
+      id: '/branch/'
+      path: '/'
+      fullPath: '/branch/'
+      preLoaderRoute: typeof BranchIndexRouteImport
+      parentRoute: typeof BranchRoute
+    }
     '/branch/orders': {
       id: '/branch/orders'
       path: '/orders'
@@ -320,10 +337,12 @@ const CustomerRouteWithChildren = CustomerRoute._addFileChildren(
 
 interface BranchRouteChildren {
   BranchOrdersRoute: typeof BranchOrdersRoute
+  BranchIndexRoute: typeof BranchIndexRoute
 }
 
 const BranchRouteChildren: BranchRouteChildren = {
   BranchOrdersRoute: BranchOrdersRoute,
+  BranchIndexRoute: BranchIndexRoute,
 }
 
 const BranchRouteWithChildren =
